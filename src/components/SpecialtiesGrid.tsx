@@ -29,6 +29,12 @@ export default function SpecialtiesGrid() {
 
   const fetchSpecialties = async () => {
     try {
+      if (!supabase) {
+        setSpecialties([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('specialties')
         .select('*')

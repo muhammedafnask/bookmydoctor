@@ -12,6 +12,12 @@ export default function FeaturedDoctors() {
 
   const fetchFeaturedDoctors = async () => {
     try {
+      if (!supabase) {
+        setDoctors([]);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('doctors')
         .select(`
