@@ -40,10 +40,10 @@ export default function Help() {
           <div className="max-w-5xl mx-auto">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Ask an Expert</h1>
             <p className="text-gray-600 text-lg mb-6">
-              Get reliable, high‑quality answers to your health questions for free.
+              Get reliable, high-quality answers to your health questions for free.
             </p>
             <p className="text-sm text-gray-500 mb-10">
-              Inspired by Doctoralia’s “Pregunta al Experto”. Reference: https://www.doctoralia.com.mx/preguntas-respuestas
+              Powered by BookMyDoctor.
             </p>
 
             <div className="grid lg:grid-cols-3 gap-8">
@@ -143,7 +143,7 @@ export default function Help() {
                   </div>
                 </div>
                 <div className="text-sm text-gray-500">
-                  Reference: https://www.doctoralia.com.mx/preguntas-respuestas
+                  Powered by BookMyDoctor
                 </div>
               </aside>
             </div>
@@ -154,5 +154,3 @@ export default function Help() {
     </div>
   );
 }
-
-

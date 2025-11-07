@@ -67,9 +67,7 @@ export default function Header() {
                 For Doctors
               </a>
               <button
-                onClick={() => {
-                  window.location.href = 'https://www.doctoralia.com.mx/preguntas-respuestas';
-                }}
+                onClick={() => { navigate('/help'); setIsMenuOpen(false); }}
                 className="text-left text-gray-700 hover:text-blue-600 transition-colors"
               >
                 Help
@@ -85,12 +83,6 @@ export default function Header() {
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-left"
               >
                 Sign Up
-              </button>
-              <button
-                onClick={() => { navigate('/help'); setIsMenuOpen(false); }}
-                className="text-left text-gray-700 hover:text-blue-600 transition-colors"
-              >
-                Help
               </button>
             </nav>
           </div>
