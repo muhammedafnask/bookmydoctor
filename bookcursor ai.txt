@@ -4,3 +4,5 @@ signup page showing when I click patient replace this page- http://localhost:517
 signup page showing when I click specialist replace this page-http://localhost:5173/signup/patient?preregistration=true
 signup page showing when I click clinical manager replace this page-http://localhost:5173/signup/clinical-manager?preregistration=true
 
+
+make it home page new feature all department level noticed showing then after click which specialist list out the details and

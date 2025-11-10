@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock, User, Phone } from 'lucide-react';
 
 export default function PatientSignUp() {
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const redirectUri = searchParams.get('redirect_uri') || '';
+  const preregistration = searchParams.get('preregistration') === 'true';
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -27,13 +27,13 @@ export default function PatientSignUp() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement signup logic
-    console.log('Patient signup:', formData);
-    if (redirectUri) {
-      window.location.href = decodeURIComponent(redirectUri);
-    } else {
-      // Redirect to home or dashboard after successful signup
-      navigate('/');
+    console.log('Patient signup:', formData, { preregistration });
+    if (preregistration) {
+      // Handle preregistration flow
+      // After successful signup, redirect appropriately
     }
+    // Redirect to home or dashboard after successful signup
+    navigate('/');
   };
 
   return (
@@ -181,9 +181,14 @@ export default function PatientSignUp() {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{' '}
-            <Link to="/signin" className="text-blue-600 hover:text-blue-700 font-semibold">
+            <a 
+              href="https://l.doctoralia.com.mx/" 
+              className="text-blue-600 hover:text-blue-700 font-semibold"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Sign In
-            </Link>
+            </a>
           </p>
         </div>
       </div>

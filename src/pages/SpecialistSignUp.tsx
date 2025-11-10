@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Mail, Lock, User, Phone, Briefcase, GraduationCap } from 'lucide-react';
 
 export default function SpecialistSignUp() {
@@ -275,9 +275,14 @@ export default function SpecialistSignUp() {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{' '}
-            <Link to="/signin" className="text-blue-600 hover:text-blue-700 font-semibold">
+            <a 
+              href="https://l.doctoralia.com.mx/" 
+              className="text-blue-600 hover:text-blue-700 font-semibold"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Sign In
-            </Link>
+            </a>
           </p>
         </div>
       </div>
