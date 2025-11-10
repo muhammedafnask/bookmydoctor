@@ -31,19 +31,19 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-4">
-            <button
-              onClick={() => { window.location.href = 'https://l.doctoralia.com.mx/'; }}
+            <Link
+              to="/signin"
               className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors"
             >
               <User className="w-5 h-5" />
               <span>Sign In</span>
-            </button>
-            <button
-              onClick={() => { window.location.href = 'https://www.doctoralia.com.mx/registro-opcion'; }}
+            </Link>
+            <Link
+              to="/signup"
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Sign Up
-            </button>
+            </Link>
           </div>
 
           <button
@@ -72,18 +72,20 @@ export default function Header() {
               >
                 Help
               </button>
-              <button
-                onClick={() => { window.location.href = 'https://l.doctoralia.com.mx/'; }}
+              <Link
+                to="/signin"
+                onClick={() => setIsMenuOpen(false)}
                 className="text-left text-gray-700 hover:text-blue-600 transition-colors"
               >
                 Sign In
-              </button>
-              <button
-                onClick={() => { window.location.href = 'https://www.doctoralia.com.mx/registro-opcion'; }}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-left"
+              </Link>
+              <Link
+                to="/signup"
+                onClick={() => setIsMenuOpen(false)}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-left inline-block"
               >
                 Sign Up
-              </button>
+              </Link>
             </nav>
           </div>
         )}

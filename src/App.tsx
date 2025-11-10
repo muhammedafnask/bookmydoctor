@@ -22,11 +22,13 @@ function App() {
     <Router>
       <Routes>
         {/* Standalone authentication pages (no global layout/header) */}
-        <Route path="/signin" element={<BlankPage />} />
-        <Route path="/signup" element={<BlankPage />} />
+        {/* More specific routes first */}
         <Route path="/signup/patient" element={<PatientSignUp />} />
         <Route path="/signup/specialist" element={<SpecialistSignUp />} />
         <Route path="/signup/clinical-manager" element={<SpecialistSignUp />} />
+        {/* General routes after specific ones */}
+        <Route path="/signin" element={<BlankPage />} />
+        <Route path="/signup" element={<BlankPage />} />
 
         {/* All other routes render inside MainLayout */}
         <Route path="/*" element={<MainLayout />}>
