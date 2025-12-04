@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page } from '../types';
-import { CheckCircle, MessageSquare, ArrowLeft } from 'lucide-react';
+import { CheckCircle, ArrowLeft } from 'lucide-react';
 import { Button } from './Button';
 
 interface AskExpertProps {

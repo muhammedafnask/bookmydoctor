@@ -1,6 +1,6 @@
 import React from 'react';
 import { Doctor } from '../types';
-import { Star, MapPin, ThumbsUp, Calendar } from 'lucide-react';
+import { Star, MapPin, ThumbsUp } from 'lucide-react';
 import { Button } from './Button';
 
 interface DoctorListProps {
