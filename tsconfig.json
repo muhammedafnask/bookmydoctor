@@ -5,21 +5,18 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node"],
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "types": ["node"]
   },
-  "include": ["components", "services"],
-  "exclude": ["node_modules", "vite.config.ts"]
+  "include": [".", "vite.config.ts"],
+  "exclude": ["node_modules", "dist"]
 }
-

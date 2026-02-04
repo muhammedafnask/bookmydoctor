@@ -1,5 +1,8 @@
+
 import { GoogleGenAI, Type } from "@google/genai";
 import { AISymptomResponse } from "../types";
+
+declare var process: any;
 
 // Always initialize the client with the API key from the environment
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
@@ -7,7 +10,8 @@ const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
 export const analyzeSymptoms = async (symptoms: string): Promise<AISymptomResponse> => {
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      // Use the recommended model for basic text tasks
+      model: "gemini-3-flash-preview",
       contents: `User symptoms: ${symptoms}. Suggest the most appropriate medical specialty from this list: [General Physician, Dentist, Cardiologist, Dermatologist, Neurologist, Orthopedist]. If none fit perfectly, choose General Physician. Also determine if this sounds like an emergency.`,
       config: {
         responseMimeType: "application/json",
@@ -23,6 +27,7 @@ export const analyzeSymptoms = async (symptoms: string): Promise<AISymptomRespon
       }
     });
 
+    // Access text property directly as per guidelines
     const text = response.text;
     if (!text) throw new Error("No response from AI");
     

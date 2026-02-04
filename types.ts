@@ -4,12 +4,18 @@ export interface Doctor {
   specialty: string;
   image: string;
   location: string;
+  clinicName: string;
   rating: number;
   reviews: number;
   experience: number;
   fee: number;
   availableSlots: string[];
   about: string;
+  isVerified: boolean;
+  languages: string[];
+  insuranceAccepted: string[];
+  totalBookings: number;
+  type: 'Independent' | 'Clinic-based';
 }
 
 export interface Specialty {
@@ -22,6 +28,8 @@ export interface FilterState {
   specialty: string;
   location: string;
   query: string;
+  availability?: 'today' | 'any';
+  type?: 'Independent' | 'Clinic-based' | 'all';
 }
 
 export enum Page {

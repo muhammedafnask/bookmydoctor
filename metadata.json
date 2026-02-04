@@ -1,5 +1,7 @@
 {
-  "name": "Copy of BookMyDoctor",
-  "description": "BookMyDoctor - The easiest way to find and book appointments with top-rated doctors.",
-  "requestFramePermissions": []
+  "name": "BookMyDoctor Premium",
+  "description": "Premium healthcare marketplace for finding and booking verified doctors with real-time availability.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
 }
