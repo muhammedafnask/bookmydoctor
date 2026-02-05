@@ -1,5 +1,5 @@
 {
-  "name": "BookMyDoctor Premium",
+  "name": "BookMyDoctor ",
   "description": "Premium healthcare marketplace for finding and booking verified doctors with real-time availability.",
   "requestFramePermissions": [
     "geolocation"
