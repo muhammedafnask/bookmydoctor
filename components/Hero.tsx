@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star, Briefcase } from 'lucide-react';
 import { Button } from './Button';
-import { LOCATIONS } from '../constants';
+import { LOCATIONS, SPECIALTIES } from '../constants';
 import { FilterState } from '../types';
 
 interface HeroProps {
@@ -13,30 +13,48 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
   const [availability, setAvailability] = useState<'any' | 'today'>('any');
   const [isLocating, setIsLocating] = useState(false);
+  const [showSpecialties, setShowSpecialties] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleManualSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Request location permission when search is clicked
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowSpecialties(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const requestLocationAndProceed = (selectedSpecialty: string = '') => {
     if ("geolocation" in navigator) {
       setIsLocating(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          console.log("Location access granted", position.coords);
           setIsLocating(false);
-          onSearch({ location, query, specialty: '', availability });
+          onSearch({ location, query, specialty: selectedSpecialty, availability });
         },
         (error) => {
-          console.warn("Location access denied or error", error.message);
           setIsLocating(false);
-          // Proceed with manual search even if location is denied
-          onSearch({ location, query, specialty: '', availability });
+          // Proceed anyway even if denied
+          onSearch({ location, query, specialty: selectedSpecialty, availability });
         },
         { timeout: 5000 }
       );
     } else {
-      onSearch({ location, query, specialty: '', availability });
+      onSearch({ location, query, specialty: selectedSpecialty, availability });
     }
+  };
+
+  const handleManualSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    requestLocationAndProceed();
+  };
+
+  const handleSelectSpecialty = (specName: string) => {
+    setQuery(specName);
+    setShowSpecialties(false);
+    requestLocationAndProceed(specName);
   };
 
   return (
@@ -69,11 +87,11 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
         </div>
 
         {/* Search Container */}
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto" ref={dropdownRef}>
           <div className="bg-white rounded-[40px] shadow-[0_32px_80px_-20px_rgba(13,148,136,0.15)] border border-slate-100 p-4 lg:p-6 transition-all hover:shadow-[0_32px_80px_-10px_rgba(13,148,136,0.2)]">
             <form onSubmit={handleManualSearch} className="flex flex-col gap-5">
               
-              {/* Main Search */}
+              {/* Main Search Input */}
               <div className="relative group flex-grow">
                 <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                   <Search className="h-6 w-6 text-slate-300 group-focus-within:text-brand-600 transition-colors" />
@@ -83,8 +101,37 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                   className="block w-full pl-16 pr-6 py-6 bg-slate-50 border-none rounded-[28px] focus:ring-4 focus:ring-brand-100 text-slate-900 placeholder:text-slate-400 font-black text-xl h-20 transition-all outline-none"
                   placeholder="Search by doctor or specialty"
                   value={query}
+                  autoComplete="off"
+                  onFocus={() => setShowSpecialties(true)}
                   onChange={(e) => setQuery(e.target.value)}
                 />
+
+                {/* Specialty Dropdown */}
+                {showSpecialties && (
+                  <div className="absolute top-full left-0 w-full mt-4 bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="max-h-[400px] overflow-y-auto">
+                      {SPECIALTIES.filter(s => s.name.toLowerCase().includes(query.toLowerCase())).map((spec) => (
+                        <button
+                          key={spec.id}
+                          type="button"
+                          onClick={() => handleSelectSpecialty(spec.name)}
+                          className="w-full flex items-center justify-between px-8 py-5 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-none group"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 bg-brand-50 rounded-full flex items-center justify-center text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-all">
+                              <Briefcase className="w-5 h-5" />
+                            </div>
+                            <span className="text-lg font-bold text-slate-700 group-hover:text-slate-900">{spec.name}</span>
+                          </div>
+                          <span className="text-xs font-black text-slate-300 uppercase tracking-widest">Specialty</span>
+                        </button>
+                      ))}
+                      {SPECIALTIES.filter(s => s.name.toLowerCase().includes(query.toLowerCase())).length === 0 && (
+                        <div className="p-8 text-center text-slate-400 font-bold">No specialties matching your search</div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Filters & Action */}
