@@ -12,10 +12,31 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   const [location, setLocation] = useState('');
   const [query, setQuery] = useState('');
   const [availability, setAvailability] = useState<'any' | 'today'>('any');
+  const [isLocating, setIsLocating] = useState(false);
 
   const handleManualSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch({ location, query, specialty: '', availability });
+    
+    // Request location permission when search is clicked
+    if ("geolocation" in navigator) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("Location access granted", position.coords);
+          setIsLocating(false);
+          onSearch({ location, query, specialty: '', availability });
+        },
+        (error) => {
+          console.warn("Location access denied or error", error.message);
+          setIsLocating(false);
+          // Proceed with manual search even if location is denied
+          onSearch({ location, query, specialty: '', availability });
+        },
+        { timeout: 5000 }
+      );
+    } else {
+      onSearch({ location, query, specialty: '', availability });
+    }
   };
 
   return (
@@ -97,8 +118,13 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                 </div>
 
                 {/* CTA Button */}
-                <Button type="submit" size="lg" className="h-16 text-lg font-black tracking-wider bg-brand-600 hover:bg-brand-700 shadow-2xl shadow-brand-200 transition-all rounded-[24px] hover:-translate-y-1 active:scale-[0.98]">
-                  FIND DOCTOR
+                <Button 
+                  type="submit" 
+                  size="lg" 
+                  disabled={isLocating}
+                  className="h-16 text-lg font-black tracking-wider bg-brand-600 hover:bg-brand-700 shadow-2xl shadow-brand-200 transition-all rounded-[24px] hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70"
+                >
+                  {isLocating ? 'LOCATING...' : 'FIND DOCTOR'}
                 </Button>
               </div>
             </form>

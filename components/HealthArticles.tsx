@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, ArrowRight } from 'lucide-react';
+import { Clock, ArrowRight, HeartPulse, ShieldAlert, Sparkles } from 'lucide-react';
 
 export const HealthArticles: React.FC = () => {
   const articles = [
@@ -7,19 +7,22 @@ export const HealthArticles: React.FC = () => {
       title: '5 Tips for Better Heart Health in 2025',
       category: 'Cardiology',
       date: 'May 12, 2025',
-      image: 'https://images.unsplash.com/photo-1505751172107-573225ad4b70?q=80&w=400&auto=format&fit=crop'
+      icon: HeartPulse,
+      color: 'bg-rose-50 text-rose-500'
     },
     {
       title: 'Common Myths About Dental Hygiene',
       category: 'Dental Care',
       date: 'May 10, 2025',
-      image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?q=80&w=400&auto=format&fit=crop'
+      icon: Sparkles,
+      color: 'bg-cyan-50 text-cyan-500'
     },
     {
       title: 'Protecting Your Skin During Summer',
       category: 'Dermatology',
       date: 'May 08, 2025',
-      image: 'https://images.unsplash.com/photo-1520333789090-1afc82db536a?q=80&w=400&auto=format&fit=crop'
+      icon: ShieldAlert,
+      color: 'bg-orange-50 text-orange-500'
     }
   ];
 
@@ -34,9 +37,11 @@ export const HealthArticles: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {articles.map((article, i) => (
             <div key={i} className="group cursor-pointer">
-              <div className="h-64 rounded-[40px] overflow-hidden mb-8 shadow-xl shadow-slate-100 group-hover:shadow-brand-100/50 transition-all duration-500">
-                <img src={article.image} alt={article.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              {/* Simplified fast-loading "image" placeholder using Icons */}
+              <div className={`h-64 rounded-[40px] flex items-center justify-center mb-8 shadow-sm group-hover:shadow-xl transition-all duration-500 ${article.color}`}>
+                <article.icon className="w-24 h-24 stroke-[1.5]" />
               </div>
+              
               <div className="flex items-center gap-3 mb-4">
                 <span className="bg-brand-50 text-brand-600 px-3 py-1 rounded-xl text-[10px] font-black uppercase tracking-widest">
                   {article.category}
