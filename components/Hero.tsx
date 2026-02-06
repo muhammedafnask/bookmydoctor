@@ -11,7 +11,6 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   const [location, setLocation] = useState('');
   const [query, setQuery] = useState('');
-  const [availability, setAvailability] = useState<'any' | 'today'>('any');
   const [isLocating, setIsLocating] = useState(false);
   const [showSpecialties, setShowSpecialties] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -27,22 +26,23 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   }, []);
 
   const requestLocationAndProceed = (selectedSpecialty: string = '') => {
+    // This triggers the browser's "Know your location" permission dialog
     if ("geolocation" in navigator) {
       setIsLocating(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setIsLocating(false);
-          onSearch({ location, query, specialty: selectedSpecialty, availability });
+          onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
         },
         (error) => {
           setIsLocating(false);
-          // Proceed anyway even if denied
-          onSearch({ location, query, specialty: selectedSpecialty, availability });
+          // If user blocks or there is an error, we still proceed with the search manually
+          onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
         },
         { timeout: 5000 }
       );
     } else {
-      onSearch({ location, query, specialty: selectedSpecialty, availability });
+      onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
     }
   };
 
@@ -87,12 +87,12 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
         </div>
 
         {/* Search Container */}
-        <div className="max-w-6xl mx-auto" ref={dropdownRef}>
+        <div className="max-w-4xl mx-auto" ref={dropdownRef}>
           <div className="bg-white rounded-[40px] shadow-[0_32px_80px_-20px_rgba(13,148,136,0.15)] border border-slate-100 p-4 lg:p-6 transition-all hover:shadow-[0_32px_80px_-10px_rgba(13,148,136,0.2)]">
-            <form onSubmit={handleManualSearch} className="flex flex-col gap-5">
+            <form onSubmit={handleManualSearch} className="flex flex-col gap-4">
               
               {/* Main Search Input */}
-              <div className="relative group flex-grow">
+              <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
                   <Search className="h-6 w-6 text-slate-300 group-focus-within:text-brand-600 transition-colors" />
                 </div>
@@ -109,7 +109,7 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                 {/* Specialty Dropdown */}
                 {showSpecialties && (
                   <div className="absolute top-full left-0 w-full mt-4 bg-white rounded-[32px] shadow-2xl border border-slate-100 overflow-hidden z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
-                    <div className="max-h-[400px] overflow-y-auto">
+                    <div className="max-h-[300px] overflow-y-auto">
                       {SPECIALTIES.filter(s => s.name.toLowerCase().includes(query.toLowerCase())).map((spec) => (
                         <button
                           key={spec.id}
@@ -126,54 +126,36 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
                           <span className="text-xs font-black text-slate-300 uppercase tracking-widest">Specialty</span>
                         </button>
                       ))}
-                      {SPECIALTIES.filter(s => s.name.toLowerCase().includes(query.toLowerCase())).length === 0 && (
-                        <div className="p-8 text-center text-slate-400 font-bold">No specialties matching your search</div>
-                      )}
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Filters & Action */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                
-                {/* City Select */}
-                <div className="relative group h-16">
-                  <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                    <MapPin className="h-5 w-5 text-slate-300" />
-                  </div>
-                  <select
-                    className="block w-full h-full pl-14 pr-10 bg-slate-50 border-none rounded-[24px] focus:ring-4 focus:ring-brand-100 text-slate-700 appearance-none cursor-pointer font-bold text-sm outline-none"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  >
-                    <option value="">Select City</option>
-                    {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
-                  </select>
-                  <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+              {/* City Select */}
+              <div className="relative group h-20">
+                <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                  <MapPin className="h-6 w-6 text-slate-300" />
                 </div>
-
-                {/* Availability Toggle */}
-                <div 
-                  className="relative flex items-center justify-between bg-slate-50 rounded-[24px] px-6 h-16 cursor-pointer hover:bg-slate-100 transition-colors" 
-                  onClick={() => setAvailability(availability === 'any' ? 'today' : 'any')}
+                <select
+                  className="block w-full h-full pl-16 pr-10 bg-slate-50 border-none rounded-[28px] focus:ring-4 focus:ring-brand-100 text-slate-700 appearance-none cursor-pointer font-black text-lg outline-none"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                 >
-                  <span className="text-sm font-black text-slate-600">Available Today</span>
-                  <div className={`w-12 h-7 rounded-full transition-all flex items-center p-1 ${availability === 'today' ? 'bg-brand-600 shadow-lg shadow-brand-200' : 'bg-slate-200'}`}>
-                    <div className={`w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${availability === 'today' ? 'translate-x-5' : 'translate-x-0'}`}></div>
-                  </div>
-                </div>
-
-                {/* CTA Button */}
-                <Button 
-                  type="submit" 
-                  size="lg" 
-                  disabled={isLocating}
-                  className="h-16 text-lg font-black tracking-wider bg-brand-600 hover:bg-brand-700 shadow-2xl shadow-brand-200 transition-all rounded-[24px] hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70"
-                >
-                  {isLocating ? 'LOCATING...' : 'FIND DOCTOR'}
-                </Button>
+                  <option value="">Select City</option>
+                  {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+                </select>
+                <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 pointer-events-none" />
               </div>
+
+              {/* CTA Button */}
+              <Button 
+                type="submit" 
+                size="lg" 
+                disabled={isLocating}
+                className="h-20 text-xl font-black tracking-widest bg-brand-600 hover:bg-brand-700 shadow-2xl shadow-brand-200 transition-all rounded-[28px] hover:-translate-y-1 active:scale-[0.98] disabled:opacity-70 border-none"
+              >
+                {isLocating ? 'LOCATING...' : 'FIND DOCTOR'}
+              </Button>
             </form>
           </div>
         </div>

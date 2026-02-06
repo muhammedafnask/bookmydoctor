@@ -70,7 +70,7 @@ const App: React.FC = () => {
   };
 
   const handleSelectSpecialty = (specialty: string) => {
-    setFilters({ location: '', specialty, query: '', type: 'all' });
+    setFilters({ location: '', specialty, query: '', type: 'all', availability: 'any' });
     handleNavigate(Page.SEARCH);
   };
 
@@ -87,7 +87,7 @@ const App: React.FC = () => {
   const filteredDoctors = useMemo(() => {
     return doctors.filter(doc => {
       const matchLoc = filters.location ? doc.location.toLowerCase().includes(filters.location.toLowerCase()) : true;
-      const matchSpec = filters.specialty ? doc.specialty === filters.specialty : true;
+      const matchSpec = filters.specialty ? doc.specialty.toLowerCase() === filters.specialty.toLowerCase() : true;
       const matchQuery = filters.query 
         ? (doc.name.toLowerCase().includes(filters.query.toLowerCase()) || 
            doc.specialty.toLowerCase().includes(filters.query.toLowerCase()) ||
@@ -281,13 +281,6 @@ const App: React.FC = () => {
                             <option value="Independent">Independent</option>
                             <option value="Clinic-based">Clinic-based</option>
                          </select>
-                       </div>
-                       <div>
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-5 block">Availability</label>
-                          <label className="flex items-center gap-4 text-sm font-bold text-slate-600 cursor-pointer group">
-                             <input type="checkbox" checked={filters.availability === 'today'} onChange={() => setFilters({...filters, availability: filters.availability === 'today' ? 'any' : 'today'})} className="w-6 h-6 rounded-lg border-2 border-slate-200 text-brand-600 focus:ring-brand-500" />
-                             <span className="group-hover:text-brand-600">Available Today</span>
-                          </label>
                        </div>
                        <Button variant="outline" size="sm" className="w-full py-4.5 font-black text-[10px] uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:text-brand-600 hover:border-brand-600 rounded-[20px]" onClick={() => setFilters({location: '', specialty: '', query: '', availability: 'any', type: 'all'})}>Clear Filters</Button>
                     </div>
