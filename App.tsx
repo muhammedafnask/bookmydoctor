@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -118,16 +117,6 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col font-sans text-slate-900 bg-white">
       <Navbar onNavigate={handleNavigate} currentPage={currentPage} />
-
-      <div className="md:hidden fixed bottom-6 right-6 z-[90]">
-         <Button 
-            size="lg" 
-            className="rounded-full h-16 w-16 bg-brand-600 shadow-2xl shadow-brand-400 p-0 flex items-center justify-center animate-pulse border-none outline-none"
-            onClick={() => handleNavigate(Page.SEARCH)}
-          >
-            <Search className="h-7 w-7 text-white" />
-         </Button>
-      </div>
 
       <main className="flex-grow">
         {currentPage === Page.HOME && (
