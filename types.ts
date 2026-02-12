@@ -1,3 +1,4 @@
+
 export interface Doctor {
   id: string;
   name: string;
@@ -28,7 +29,6 @@ export interface FilterState {
   specialty: string;
   location: string;
   query: string;
-  availability?: 'today' | 'any';
   type?: 'Independent' | 'Clinic-based' | 'all';
 }
 

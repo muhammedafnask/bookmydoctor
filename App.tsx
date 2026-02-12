@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -32,7 +33,7 @@ import {
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>(Page.HOME);
-  const [filters, setFilters] = useState<FilterState>({ location: '', specialty: '', query: '', availability: 'any', type: 'all' });
+  const [filters, setFilters] = useState<FilterState>({ location: '', specialty: '', query: '', type: 'all' });
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -70,8 +71,22 @@ const App: React.FC = () => {
   };
 
   const handleSelectSpecialty = (specialty: string) => {
-    setFilters({ location: '', specialty, query: '', type: 'all', availability: 'any' });
-    handleNavigate(Page.SEARCH);
+    // Attempt to request location when a specialty is selected from home
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        () => {
+          setFilters({ location: '', specialty, query: '', type: 'all' });
+          handleNavigate(Page.SEARCH);
+        },
+        () => {
+          setFilters({ location: '', specialty, query: '', type: 'all' });
+          handleNavigate(Page.SEARCH);
+        }
+      );
+    } else {
+      setFilters({ location: '', specialty, query: '', type: 'all' });
+      handleNavigate(Page.SEARCH);
+    }
   };
 
   const handleBookClick = (doctor: Doctor) => {
@@ -282,7 +297,7 @@ const App: React.FC = () => {
                             <option value="Clinic-based">Clinic-based</option>
                          </select>
                        </div>
-                       <Button variant="outline" size="sm" className="w-full py-4.5 font-black text-[10px] uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:text-brand-600 hover:border-brand-600 rounded-[20px]" onClick={() => setFilters({location: '', specialty: '', query: '', availability: 'any', type: 'all'})}>Clear Filters</Button>
+                       <Button variant="outline" size="sm" className="w-full py-4.5 font-black text-[10px] uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:text-brand-600 hover:border-brand-600 rounded-[20px]" onClick={() => setFilters({location: '', specialty: '', query: '', type: 'all'})}>Clear Filters</Button>
                     </div>
                  </div>
               </div>
