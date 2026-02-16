@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from './Button';
 import { Page } from '../types';
-import { Eye, ArrowLeft } from 'lucide-react';
+import { Eye, ArrowLeft, ShieldCheck } from 'lucide-react';
 
 export const SignIn: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavigate }) => {
   return (
@@ -22,14 +22,20 @@ export const SignIn: React.FC<{ onNavigate: (page: Page) => void }> = ({ onNavig
         </div>
 
         <div className="space-y-4">
-          <button className="w-full flex justify-center items-center gap-3 px-4 py-4 border border-slate-100 rounded-2xl text-slate-700 bg-slate-50 hover:bg-white hover:border-brand-200 font-black text-xs uppercase tracking-widest transition-all">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5 w-5" alt="Google" />
-            Continue with Google
+          <button 
+            onClick={() => onNavigate(Page.SUPER_ADMIN_DASHBOARD)}
+            className="w-full flex justify-center items-center gap-3 px-4 py-4 border-2 border-indigo-100 rounded-2xl text-indigo-700 bg-indigo-50 hover:bg-indigo-600 hover:text-white font-black text-xs uppercase tracking-widest transition-all group"
+          >
+            <ShieldCheck className="h-5 w-5 group-hover:animate-pulse" />
+            Login as Super Admin
           </button>
           
-          <button className="w-full flex justify-center items-center gap-3 px-4 py-4 border border-slate-100 rounded-2xl text-slate-700 bg-slate-50 hover:bg-white hover:border-brand-200 font-black text-xs uppercase tracking-widest transition-all">
-            <img src="https://www.svgrepo.com/show/511330/apple-173.svg" className="h-5 w-5" alt="Apple" />
-            Continue with Apple
+          <button 
+            onClick={() => onNavigate(Page.ADMIN_DASHBOARD)}
+            className="w-full flex justify-center items-center gap-3 px-4 py-4 border border-slate-100 rounded-2xl text-slate-700 bg-slate-50 hover:bg-white hover:border-brand-200 font-black text-xs uppercase tracking-widest transition-all"
+          >
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="h-5 w-5" alt="Google" />
+            Sign in as Doctor
           </button>
         </div>
 

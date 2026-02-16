@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -12,6 +13,8 @@ import { SignUpPatient } from './components/SignUpPatient';
 import { SignUpSpecialist } from './components/SignUpSpecialist';
 import { SignUpClinic } from './components/SignUpClinic';
 import { AskExpert } from './components/AskExpert';
+import { AdminDashboard } from './components/AdminDashboard';
+import { SuperAdminDashboard } from './components/SuperAdminDashboard';
 import { DOCTORS as MOCK_DOCTORS, LOCATIONS, SPECIALTIES } from './constants';
 import { Doctor, FilterState, Page } from './types';
 import { Button } from './components/Button';
@@ -62,21 +65,8 @@ const App: React.FC = () => {
   };
 
   const handleSelectSpecialty = (specialty: string) => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        () => {
-          setFilters({ location: '', specialty, query: '', type: 'all' });
-          handleNavigate(Page.SEARCH);
-        },
-        () => {
-          setFilters({ location: '', specialty, query: '', type: 'all' });
-          handleNavigate(Page.SEARCH);
-        }
-      );
-    } else {
-      setFilters({ location: '', specialty, query: '', type: 'all' });
-      handleNavigate(Page.SEARCH);
-    }
+    setFilters({ location: '', specialty, query: '', type: 'all' });
+    handleNavigate(Page.SEARCH);
   };
 
   const handleBookClick = (doctor: Doctor) => {
@@ -104,6 +94,10 @@ const App: React.FC = () => {
       return matchLoc && matchSpec && matchQuery && matchType;
     });
   }, [filters, doctors]);
+
+  // Special Dashboard Rendering
+  if (currentPage === Page.ADMIN_DASHBOARD) return <AdminDashboard onNavigate={handleNavigate} />;
+  if (currentPage === Page.SUPER_ADMIN_DASHBOARD) return <SuperAdminDashboard onNavigate={handleNavigate} />;
 
   return (
     <div className="min-h-screen flex flex-col font-sans text-slate-900 bg-white">
@@ -304,6 +298,7 @@ const App: React.FC = () => {
         {currentPage === Page.SIGN_UP && <SignUp onNavigate={handleNavigate} />}
         {currentPage === Page.SIGN_UP_PATIENT && <SignUpPatient onNavigate={handleNavigate} />}
         {currentPage === Page.SIGN_UP_SPECIALIST && <SignUpSpecialist onNavigate={handleNavigate} />}
+        {/* Fixed: Use SIGN_UP_CLINIC instead of SIGN_UP_Clinic */}
         {currentPage === Page.SIGN_UP_CLINIC && <SignUpClinic onNavigate={handleNavigate} />}
 
         {currentPage === Page.APPOINTMENT_SUCCESS && (
@@ -346,6 +341,7 @@ const App: React.FC = () => {
               <ul className="space-y-5 text-sm font-bold text-slate-400">
                 <li><button className="hover:text-white transition-colors">About Us</button></li>
                 <li><button onClick={() => scrollToSection('contact')} className="hover:text-white transition-colors">Contact Us</button></li>
+                <li><button onClick={() => handleNavigate(Page.SUPER_ADMIN_DASHBOARD)} className="hover:text-brand-400 transition-colors text-[8px] opacity-20">Admin Access</button></li>
               </ul>
             </div>
           </div>

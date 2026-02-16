@@ -1,4 +1,3 @@
-
 export interface Doctor {
   id: string;
   name: string;
@@ -42,7 +41,9 @@ export enum Page {
   SIGN_UP_PATIENT = 'SIGN_UP_PATIENT',
   SIGN_UP_SPECIALIST = 'SIGN_UP_SPECIALIST',
   SIGN_UP_CLINIC = 'SIGN_UP_CLINIC',
-  ASK_EXPERT = 'ASK_EXPERT'
+  ASK_EXPERT = 'ASK_EXPERT',
+  ADMIN_DASHBOARD = 'ADMIN_DASHBOARD',
+  SUPER_ADMIN_DASHBOARD = 'SUPER_ADMIN_DASHBOARD'
 }
 
 export interface AISymptomResponse {
