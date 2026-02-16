@@ -26,23 +26,21 @@ export const Hero: React.FC<HeroProps> = ({ onSearch }) => {
   }, []);
 
   const requestLocationAndProceed = (selectedSpecialty: string = '') => {
-    // This triggers the browser's "Know your location" permission dialog
     if ("geolocation" in navigator) {
       setIsLocating(true);
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        () => {
           setIsLocating(false);
-          onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
+          onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
         },
-        (error) => {
+        () => {
           setIsLocating(false);
-          // If user blocks or there is an error, we still proceed with the search manually
-          onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
+          onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
         },
         { timeout: 5000 }
       );
     } else {
-      onSearch({ location, query, specialty: selectedSpecialty || query, availability: 'any' });
+      onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
     }
   };
 

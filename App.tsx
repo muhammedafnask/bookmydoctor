@@ -35,16 +35,8 @@ const App: React.FC = () => {
   const [filters, setFilters] = useState<FilterState>({ location: '', specialty: '', query: '', type: 'all' });
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-       setDoctors(MOCK_DOCTORS);
-       setIsLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
-  }, []);
+  const [doctors, setDoctors] = useState<Doctor[]>(MOCK_DOCTORS);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleNavigate = (page: Page) => {
     setCurrentPage(page);
@@ -70,7 +62,6 @@ const App: React.FC = () => {
   };
 
   const handleSelectSpecialty = (specialty: string) => {
-    // Attempt to request location when a specialty is selected from home
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         () => {
