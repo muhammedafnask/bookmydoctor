@@ -1,18 +1,48 @@
 import React, { useState, useMemo } from 'react';
-import { Doctor } from '../types';
-import { X, Calendar, Clock, CheckCircle, ShieldCheck, ChevronRight, MapPin, User, Mail, Phone, BellRing, ThumbsUp, Users } from 'lucide-react';
+import { CheckCircle, X, ThumbsUp, Users, Calendar, Clock, ChevronRight, User, Mail, Phone, BellRing, ShieldCheck } from 'lucide-react';
+import { Doctor, Language } from '../types';
+import { TRANSLATIONS } from '../constants';
 import { Button } from './Button';
 
 interface BookingModalProps {
   doctor: Doctor | null;
   onClose: () => void;
   onConfirm: () => void;
+  language: Language;
 }
 
-export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onConfirm }) => {
+interface ProgressIndicatorProps {
+  step: number;
+  t: Record<string, string>;
+}
+
+const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ step, t }) => (
+  <div className="flex items-center justify-between mb-8 px-4">
+    {[1, 2, 3].map((s) => (
+      <React.Fragment key={s}>
+        <div className="flex flex-col items-center gap-2">
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black border-4 transition-all ${
+            step >= s ? 'bg-sky-600 text-white border-sky-100' : 'bg-slate-50 text-slate-300 border-slate-50'
+          }`}>
+            {step > s ? <CheckCircle className="w-6 h-6" /> : s}
+          </div>
+          <span className={`text-[10px] font-black uppercase tracking-widest ${step >= s ? 'text-sky-600' : 'text-slate-400'}`}>
+            {s === 1 ? t.time : s === 2 ? t.details : t.done}
+          </span>
+        </div>
+        {s < 3 && (
+          <div className={`flex-1 h-1 mx-4 rounded-full transition-colors ${step > s ? 'bg-sky-600' : 'bg-slate-100'}`}></div>
+        )}
+      </React.Fragment>
+    ))}
+  </div>
+);
+
+export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onConfirm, language }) => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<string>('');
   const [step, setStep] = useState(1); // 1: Select Time, 2: Patient Details, 3: Success
+  const t = TRANSLATIONS[language];
 
   // Generate next 15 days
   const dates = useMemo(() => {
@@ -21,14 +51,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
     for (let i = 0; i < 15; i++) {
       const date = new Date();
       date.setDate(today.getDate() + i);
-      const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : date.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayName = i === 0 ? (language === 'EN' ? 'Today' : 'आज') : i === 1 ? (language === 'EN' ? 'Tomorrow' : 'कल') : date.toLocaleDateString(language === 'EN' ? 'en-US' : 'hi-IN', { weekday: 'short' });
       const dayNum = date.getDate();
-      const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+      const monthName = date.toLocaleDateString(language === 'EN' ? 'en-US' : 'hi-IN', { month: 'short' });
       const fullValue = date.toISOString().split('T')[0];
       arr.push({ label: `${dayName}, ${dayNum} ${monthName}`, value: fullValue, shortDay: dayName, num: dayNum });
     }
     return arr;
-  }, []);
+  }, [language]);
 
   if (!doctor) return null;
 
@@ -43,28 +73,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
     }
   };
 
-  const ProgressIndicator = () => (
-    <div className="flex items-center justify-between mb-8 px-4">
-      {[1, 2, 3].map((s) => (
-        <React.Fragment key={s}>
-          <div className="flex flex-col items-center gap-2">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center font-black border-4 transition-all ${
-              step >= s ? 'bg-brand-600 text-white border-brand-100' : 'bg-slate-50 text-slate-300 border-slate-50'
-            }`}>
-              {step > s ? <CheckCircle className="w-6 h-6" /> : s}
-            </div>
-            <span className={`text-[10px] font-black uppercase tracking-widest ${step >= s ? 'text-brand-600' : 'text-slate-400'}`}>
-              {s === 1 ? 'Time' : s === 2 ? 'Details' : 'Done'}
-            </span>
-          </div>
-          {s < 3 && (
-            <div className={`flex-1 h-1 mx-4 rounded-full transition-colors ${step > s ? 'bg-brand-600' : 'bg-slate-100'}`}></div>
-          )}
-        </React.Fragment>
-      ))}
-    </div>
-  );
-
   return (
     <div className="fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-center justify-center min-h-screen px-4 py-8">
@@ -75,13 +83,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
           <div className="p-8 md:p-10">
             {/* Header */}
             <div className="flex justify-between items-center mb-8">
-              <h3 className="text-3xl font-black text-slate-900 tracking-tight">Book Appointment</h3>
+              <h3 className="text-3xl font-black text-slate-900 tracking-tight">{t.bookAppointment}</h3>
               <button onClick={onClose} className="bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full p-2.5 transition-colors">
                 <X className="h-6 w-6" />
               </button>
             </div>
 
-            <ProgressIndicator />
+            <ProgressIndicator step={step} t={t} />
 
             {step === 1 && (
               <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -90,9 +98,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                   <img src={doctor.image} alt="" className="h-24 w-24 rounded-[28px] object-cover shadow-lg border-2 border-white" />
                   <div className="flex-1 text-center md:text-left">
                     <h4 className="font-black text-slate-900 text-2xl">{doctor.name}</h4>
-                    <p className="text-sm text-brand-600 font-bold uppercase tracking-widest mb-3">{doctor.specialty}</p>
+                    <p className="text-sm text-sky-600 font-bold uppercase tracking-widest mb-3">{doctor.specialty}</p>
                     <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                      <div className="flex items-center gap-2 bg-brand-50 text-brand-700 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-brand-100/50">
+                      <div className="flex items-center gap-2 bg-sky-50 text-sky-700 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest border border-sky-100/50">
                         <ThumbsUp className="w-3 h-3" />
                         <span>98% Patient Approval</span>
                       </div>
@@ -107,7 +115,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                 {/* Date Selection - Next 15 Days */}
                 <div>
                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-brand-600" /> Choose Day (Next 15 Days)
+                    <Calendar className="w-4 h-4 text-sky-600" /> Choose Day (Next 15 Days)
                   </h4>
                   <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-1 px-1">
                     {dates.map((d) => (
@@ -116,8 +124,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                         onClick={() => setSelectedDate(d.value)}
                         className={`flex flex-col items-center justify-center min-w-[100px] h-24 rounded-[24px] transition-all border-2 ${
                           selectedDate === d.value 
-                            ? 'bg-brand-600 text-white border-brand-600 shadow-xl shadow-brand-100 scale-[1.05]' 
-                            : 'bg-white text-slate-700 border-slate-100 hover:border-brand-200'
+                            ? 'bg-sky-600 text-white border-sky-600 shadow-xl shadow-sky-100 scale-[1.05]' 
+                            : 'bg-white text-slate-700 border-slate-100 hover:border-sky-200'
                         }`}
                       >
                         <span className="text-[10px] font-black uppercase tracking-tighter opacity-80 mb-1">{d.shortDay}</span>
@@ -130,7 +138,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                 {/* Time Selection */}
                 <div>
                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-brand-600" /> Select Available Time
+                    <Clock className="w-4 h-4 text-sky-600" /> Select Available Time
                   </h4>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {doctor.availableSlots.map((slot) => (
@@ -139,8 +147,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                         onClick={() => setSelectedSlot(slot)}
                         className={`px-4 py-4 rounded-2xl text-xs font-black transition-all border-2 ${
                           selectedSlot === slot 
-                            ? 'bg-brand-600 text-white border-brand-600 shadow-xl shadow-brand-100' 
-                            : 'bg-white text-slate-700 border-slate-100 hover:border-brand-200'
+                            ? 'bg-sky-600 text-white border-sky-600 shadow-xl shadow-sky-100' 
+                            : 'bg-white text-slate-700 border-slate-100 hover:border-sky-200'
                         }`}
                       >
                         {slot}
@@ -152,9 +160,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                 <Button 
                   onClick={handleNext} 
                   disabled={!selectedDate || !selectedSlot}
-                  className="w-full py-6 text-lg font-black bg-brand-600 hover:bg-brand-700 shadow-2xl shadow-brand-200/50 rounded-[24px] flex items-center justify-center gap-3 border-none"
+                  className="w-full py-6 text-lg font-black bg-sky-600 hover:bg-sky-700 shadow-2xl shadow-sky-200/50 rounded-[24px] flex items-center justify-center gap-3 border-none"
                 >
-                  CONTINUE <ChevronRight className="w-6 h-6" />
+                  {t.continue} <ChevronRight className="w-6 h-6" />
                 </Button>
               </div>
             )}
@@ -162,40 +170,40 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
             {step === 2 && (
               <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="text-center mb-6">
-                  <h4 className="text-xl font-black text-slate-900">Patient Information</h4>
+                  <h4 className="text-xl font-black text-slate-900">{t.patientInfo}</h4>
                   <p className="text-slate-500 font-medium">We'll send your confirmation to these details.</p>
                 </div>
 
                 <div className="space-y-4">
                   <div className="relative">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input type="text" placeholder="Full Name" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-brand-500 outline-none" />
+                    <input type="text" placeholder="Full Name" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-sky-500 outline-none" />
                   </div>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input type="email" placeholder="Email Address" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-brand-500 outline-none" />
+                    <input type="email" placeholder="Email Address" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-sky-500 outline-none" />
                   </div>
                   <div className="relative">
                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input type="tel" placeholder="Phone Number (for SMS/WhatsApp)" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-brand-500 outline-none" />
+                    <input type="tel" placeholder="Phone Number (for SMS/WhatsApp)" className="w-full pl-12 pr-4 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-sky-500 outline-none" />
                   </div>
                 </div>
 
-                <div className="bg-brand-50 p-6 rounded-[28px] border border-brand-100 flex items-start gap-4">
-                  <div className="w-10 h-10 bg-brand-600 rounded-full flex items-center justify-center shrink-0">
+                <div className="bg-sky-50 p-6 rounded-[28px] border border-sky-100 flex items-start gap-4">
+                  <div className="w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center shrink-0">
                     <BellRing className="w-5 h-5 text-white" />
                   </div>
-                  <p className="text-sm font-bold text-brand-800 leading-relaxed">
-                    By clicking confirm, you'll receive an instant confirmation via SMS & WhatsApp. You are booking for <strong>{new Date(selectedDate).toLocaleDateString('en-US', { day: 'numeric', month: 'long' })}</strong> at <strong>{selectedSlot}</strong>.
+                  <p className="text-sm font-bold text-sky-800 leading-relaxed">
+                    By clicking confirm, you'll receive an instant confirmation via SMS & WhatsApp. You are booking for <strong>{new Date(selectedDate).toLocaleDateString(language === 'EN' ? 'en-US' : 'hi-IN', { day: 'numeric', month: 'long' })}</strong> at <strong>{selectedSlot}</strong>.
                   </p>
                 </div>
 
                 <div className="flex gap-4">
                    <Button variant="outline" onClick={() => setStep(1)} className="flex-1 py-5 font-black border-2 border-slate-100 rounded-[20px]">
-                      BACK
+                      {t.back}
                    </Button>
-                   <Button onClick={handleNext} className="flex-[2] py-5 text-lg font-black bg-brand-600 hover:bg-brand-700 shadow-2xl rounded-[20px] border-none">
-                      CONFIRM BOOKING
+                   <Button onClick={handleNext} className="flex-[2] py-5 text-lg font-black bg-sky-600 hover:bg-sky-700 shadow-2xl rounded-[20px] border-none">
+                      {t.confirmBooking}
                    </Button>
                 </div>
               </div>
@@ -206,12 +214,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                 <div className="mx-auto flex items-center justify-center h-24 w-24 rounded-full bg-emerald-100 mb-8 shadow-xl shadow-emerald-50">
                   <CheckCircle className="h-12 w-12 text-emerald-600" />
                 </div>
-                <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">Confirmed!</h3>
+                <h3 className="text-4xl font-black text-slate-900 mb-4 tracking-tight">{t.confirmed}</h3>
                 <p className="text-slate-600 text-xl font-medium leading-relaxed max-w-sm mx-auto mb-8">
-                  Your appointment with <strong>Dr. {doctor.name.split(' ').pop()}</strong> is scheduled. Check your phone for confirmation.
+                  Your appointment with <strong>Dr. {doctor.name.split(' ').pop()}</strong> is scheduled. {t.checkPhone}
                 </p>
-                <div className="flex items-center justify-center gap-3 text-brand-600 font-bold uppercase text-xs tracking-widest">
-                  <ShieldCheck className="w-5 h-5" /> Verified Booking
+                <div className="flex items-center justify-center gap-3 text-sky-600 font-bold uppercase text-xs tracking-widest">
+                  <ShieldCheck className="w-5 h-5" /> {t.verifiedBooking}
                 </div>
               </div>
             )}

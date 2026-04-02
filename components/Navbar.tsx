@@ -1,16 +1,19 @@
 import React from 'react';
-import { Stethoscope, Menu, X, Globe } from 'lucide-react';
+import { Stethoscope, Menu, X, Globe, Sparkles } from 'lucide-react';
 import { Button } from './Button';
-import { Page } from '../types';
+import { Page, Language } from '../types';
+import { TRANSLATIONS } from '../constants';
 
 interface NavbarProps {
   onNavigate: (page: Page) => void;
   currentPage: Page;
+  language: Language;
+  onLanguageChange: (lang: Language) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage, language, onLanguageChange }) => {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [lang, setLang] = React.useState<'EN' | 'ML'>('EN');
+  const t = TRANSLATIONS[language];
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -28,7 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
         <div className="flex justify-between h-20">
           <div className="flex items-center cursor-pointer" onClick={() => onNavigate(Page.HOME)}>
             <div className="flex-shrink-0 flex items-center gap-2">
-              <Stethoscope className="h-9 w-9 text-brand-600" strokeWidth={3} />
+              <Stethoscope className="h-9 w-9 text-sky-600" strokeWidth={3} />
               <span className="font-black text-2xl text-slate-900 tracking-tighter">BookMyDoctor</span>
             </div>
           </div>
@@ -36,54 +39,55 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
           <div className="hidden md:flex items-center space-x-8">
             <button 
               onClick={() => onNavigate(Page.HOME)}
-              className={`${currentPage === Page.HOME ? 'text-brand-600' : 'text-slate-600 hover:text-brand-600'} transition-colors font-black uppercase text-[10px] tracking-widest`}
+              className={`${currentPage === Page.HOME ? 'text-sky-600' : 'text-slate-600 hover:text-sky-600'} transition-colors font-black uppercase text-[10px] tracking-widest`}
             >
-              Home
+              {t.home}
+            </button>
+            <button 
+              onClick={() => onNavigate(Page.ASK_EXPERT)}
+              className={`${currentPage === Page.ASK_EXPERT ? 'text-sky-600' : 'text-slate-600 hover:text-sky-600'} transition-colors font-black uppercase text-[10px] tracking-widest flex items-center gap-1.5`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-sky-500" />
+              {t.aiAssistant}
             </button>
             <button 
               onClick={() => scrollToSection('specialties')}
-              className="text-slate-600 hover:text-brand-600 transition-colors font-black uppercase text-[10px] tracking-widest"
+              className="text-slate-600 hover:text-sky-600 transition-colors font-black uppercase text-[10px] tracking-widest"
             >
-              Specialties
+              {t.specialties}
             </button>
             <button 
               onClick={() => scrollToSection('how-to-book')}
-              className="text-slate-600 hover:text-brand-600 transition-colors font-black uppercase text-[10px] tracking-widest"
+              className="text-slate-600 hover:text-sky-600 transition-colors font-black uppercase text-[10px] tracking-widest"
             >
-              How to Book
-            </button>
-            <button 
-              onClick={() => scrollToSection('for-doctors')}
-              className="text-slate-600 hover:text-brand-600 transition-colors font-black uppercase text-[10px] tracking-widest"
-            >
-              For Doctors
+              {t.howToBook}
             </button>
             <button 
               onClick={() => scrollToSection('contact')}
-              className="text-slate-600 hover:text-brand-600 transition-colors font-black uppercase text-[10px] tracking-widest"
+              className="text-slate-600 hover:text-sky-600 transition-colors font-black uppercase text-[10px] tracking-widest"
             >
-              Contact
+              {t.contact}
             </button>
             
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
 
             {/* Language Toggle */}
             <button 
-              onClick={() => setLang(lang === 'EN' ? 'ML' : 'EN')}
-              className="flex items-center gap-1.5 text-slate-600 hover:text-brand-600 transition-colors font-black uppercase text-[10px] tracking-widest"
+              onClick={() => onLanguageChange(language === 'EN' ? 'HI' : 'EN')}
+              className="flex items-center gap-1.5 text-slate-600 hover:text-sky-600 transition-colors font-black uppercase text-[10px] tracking-widest"
             >
               <Globe className="w-4 h-4" />
-              {lang}
+              {language}
             </button>
 
             <button 
               onClick={() => onNavigate(Page.SIGN_IN)}
-              className={`font-black uppercase text-[10px] tracking-widest transition-colors ${currentPage === Page.SIGN_IN ? 'text-brand-600' : 'text-slate-600 hover:text-brand-600'}`}
+              className={`font-black uppercase text-[10px] tracking-widest transition-colors ${currentPage === Page.SIGN_IN ? 'text-sky-600' : 'text-slate-600 hover:text-sky-600'}`}
             >
-              Sign In
+              {t.signIn}
             </button>
-            <Button variant="primary" size="sm" className="rounded-xl px-6 py-2.5 font-black uppercase text-[10px] tracking-widest border-none shadow-lg shadow-brand-100" onClick={() => onNavigate(Page.SIGN_UP)}>
-              Sign Up
+            <Button variant="primary" size="sm" className="rounded-xl px-6 py-2.5 font-black uppercase text-[10px] tracking-widest border-none shadow-lg shadow-sky-100" onClick={() => onNavigate(Page.SIGN_UP)}>
+              {t.signUp}
             </Button>
           </div>
 
@@ -101,38 +105,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPage }) => {
           <div className="px-4 pt-2 pb-6 space-y-2">
             <button
               onClick={() => { onNavigate(Page.HOME); setIsOpen(false); }}
-              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-brand-600 hover:bg-brand-50"
+              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-sky-600 hover:bg-sky-50"
             >
-              Home
+              {t.home}
+            </button>
+            <button
+              onClick={() => { onNavigate(Page.ASK_EXPERT); setIsOpen(false); }}
+              className="flex items-center gap-2 w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-sky-600 bg-sky-50"
+            >
+              <Sparkles className="w-4 h-4" />
+              {t.aiAssistant}
             </button>
             <button
               onClick={() => scrollToSection('specialties')}
-              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-brand-600 hover:bg-brand-50"
+              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-sky-600 hover:bg-sky-50"
             >
-              Specialties
+              {t.specialties}
             </button>
             <button
               onClick={() => scrollToSection('how-to-book')}
-              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-brand-600 hover:bg-brand-50"
+              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-sky-600 hover:bg-sky-50"
             >
-              How to Book
-            </button>
-            <button
-              onClick={() => scrollToSection('for-doctors')}
-              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-brand-600 hover:bg-brand-50"
-            >
-              For Doctors
+              {t.howToBook}
             </button>
             <div className="h-px bg-slate-100 my-2"></div>
             <button
               onClick={() => { onNavigate(Page.SIGN_IN); setIsOpen(false); }}
-              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-brand-600 hover:bg-brand-50"
+              className="block w-full text-left px-3 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-700 hover:text-sky-600 hover:bg-sky-50"
             >
-              Sign In
+              {t.signIn}
             </button>
             <div className="pt-2">
-               <Button variant="primary" className="w-full justify-center rounded-xl py-4 font-black uppercase text-xs tracking-widest border-none shadow-xl shadow-brand-100" onClick={() => { onNavigate(Page.SIGN_UP); setIsOpen(false); }}>
-                Sign Up
+               <Button variant="primary" className="w-full justify-center rounded-xl py-4 font-black uppercase text-xs tracking-widest border-none shadow-xl shadow-sky-100" onClick={() => { onNavigate(Page.SIGN_UP); setIsOpen(false); }}>
+                {t.signUp}
               </Button>
             </div>
           </div>

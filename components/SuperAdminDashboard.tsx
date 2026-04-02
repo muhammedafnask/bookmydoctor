@@ -7,7 +7,6 @@ import {
   FileCheck, 
   XCircle, 
   CheckCircle2, 
-  Search, 
   Bell, 
   Settings, 
   LogOut,
@@ -23,7 +22,7 @@ interface SuperAdminDashboardProps {
 }
 
 export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavigate }) => {
-  const [activeTab, setActiveTab] = useState<'overview' | 'approvals' | 'analytics'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'approvals' | 'doctors' | 'analytics' | 'settings'>('overview');
 
   const pendingClinics = [
     { id: 'c1', name: 'Al Noor Medical Center', location: 'Kochi', license: 'DHA-772-12', date: '2025-05-18', status: 'Pending' },
@@ -32,8 +31,8 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
   ];
 
   const globalStats = [
-    { label: "Total Clinics", value: "842", change: "+12 this week", icon: Building2, color: "text-indigo-600", bg: "bg-indigo-50" },
-    { label: "Active Doctors", value: "52,400", change: "+450 this month", icon: Users, color: "text-brand-600", bg: "bg-brand-50" },
+    { label: "Total Clinics", value: "842", change: "+12 this week", icon: Building2, color: "text-sky-600", bg: "bg-sky-50" },
+    { label: "Active Doctors", value: "52,400", change: "+450 this month", icon: Users, color: "text-sky-600", bg: "bg-sky-50" },
     { label: "Platform Revenue", value: "₹1.2Cr", change: "+18.2% vs last Q", icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-50" },
     { label: "Patient Base", value: "1.2M", change: "+24k today", icon: BarChart3, color: "text-amber-600", bg: "bg-amber-50" },
   ];
@@ -43,7 +42,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
       {/* Sidebar */}
       <aside className="w-72 bg-slate-900 border-r border-slate-800 hidden lg:flex flex-col sticky top-0 h-screen">
         <div className="p-8 border-b border-slate-800 flex items-center gap-3">
-          <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center">
+          <div className="w-10 h-10 bg-sky-500 rounded-xl flex items-center justify-center">
             <ShieldCheck className="text-white w-6 h-6" />
           </div>
           <span className="font-black text-xl tracking-tighter text-white">SuperAdmin</span>
@@ -59,9 +58,9 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
           ].map((item) => (
             <button 
               key={item.id} 
-              onClick={() => setActiveTab(item.id as any)}
+              onClick={() => setActiveTab(item.id as 'overview' | 'approvals' | 'doctors' | 'analytics' | 'settings')}
               className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
-                activeTab === item.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                activeTab === item.id ? 'bg-sky-600 text-white shadow-lg shadow-sky-900' : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
               <item.icon className="w-5 h-5" />
@@ -93,7 +92,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                 <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
                 Systems Healthy
              </div>
-             <button className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-indigo-600 transition-all shadow-sm">
+             <button className="p-3 bg-white border border-slate-200 rounded-2xl text-slate-400 hover:text-sky-600 transition-all shadow-sm">
                 <Bell className="w-6 h-6" />
              </button>
           </div>
@@ -123,7 +122,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                  <h2 className="text-xl font-black text-slate-900 tracking-tight">Recent Pending Clinic Verifications</h2>
                  <button 
                   onClick={() => setActiveTab('approvals')}
-                  className="text-indigo-600 font-black text-[10px] uppercase tracking-widest hover:underline"
+                  className="text-sky-600 font-black text-[10px] uppercase tracking-widest hover:underline"
                  >
                    See All Approvals
                  </button>
@@ -133,14 +132,14 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                    <div key={clinic.id} className="flex flex-col md:flex-row items-center justify-between p-6 bg-slate-50 rounded-[32px] border border-slate-100 gap-6">
                       <div className="flex items-center gap-6">
                          <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center shadow-sm">
-                            <Building2 className="w-8 h-8 text-indigo-400" />
+                            <Building2 className="w-8 h-8 text-sky-400" />
                          </div>
                          <div>
                             <div className="font-black text-lg text-slate-900">{clinic.name}</div>
                             <div className="flex items-center gap-3 text-sm text-slate-400 font-bold">
                                <MapPin className="w-4 h-4" /> {clinic.location}
                                <span className="text-slate-200">|</span>
-                               <span className="text-indigo-500 uppercase tracking-widest text-[10px]">{clinic.license}</span>
+                               <span className="text-sky-500 uppercase tracking-widest text-[10px]">{clinic.license}</span>
                             </div>
                          </div>
                       </div>
@@ -184,7 +183,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                                  <div className="text-xs text-slate-400 font-bold">{clinic.location}, India</div>
                               </td>
                               <td className="px-10 py-8">
-                                 <div className="flex items-center gap-2 text-indigo-600 font-black text-xs">
+                                 <div className="flex items-center gap-2 text-sky-600 font-black text-xs">
                                     {clinic.license}
                                     <ExternalLink className="w-3 h-3" />
                                  </div>
@@ -195,7 +194,7 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                                     <button className="p-2.5 bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-600 rounded-xl transition-all">
                                        <XCircle className="w-5 h-5" />
                                     </button>
-                                    <button className="p-2.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-400 hover:text-indigo-600 rounded-xl transition-all">
+                                    <button className="p-2.5 bg-sky-50 hover:bg-sky-100 text-sky-400 hover:text-sky-600 rounded-xl transition-all">
                                        <CheckCircle2 className="w-5 h-5" />
                                     </button>
                                  </div>
@@ -215,41 +214,41 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
                  <h3 className="text-xl font-black text-slate-900 mb-8 tracking-tight">Booking Growth</h3>
                  <div className="h-64 bg-slate-50 rounded-[32px] flex items-end justify-between px-10 pb-6 border border-slate-100">
                     {[35, 45, 30, 60, 85, 70, 95].map((h, i) => (
-                      <div key={i} className="w-8 bg-brand-500 rounded-t-lg transition-all hover:bg-brand-600 cursor-pointer" style={{ height: `${h}%` }}></div>
+                      <div key={i} className="w-8 bg-sky-500 rounded-t-lg transition-all hover:bg-sky-600 cursor-pointer" style={{ height: `${h}%` }}></div>
                     ))}
                  </div>
                  <div className="mt-6 flex justify-between text-[10px] font-black text-slate-400 uppercase tracking-widest px-4">
                     <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                  </div>
               </div>
-              <div className="bg-indigo-900 p-10 rounded-[48px] text-white relative overflow-hidden">
-                 <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
+              <div className="bg-sky-900 p-10 rounded-[48px] text-white relative overflow-hidden">
+                 <div className="absolute top-0 right-0 w-64 h-64 bg-sky-500/20 rounded-full blur-3xl"></div>
                  <h3 className="text-2xl font-black mb-8 tracking-tight">Revenue Distribution</h3>
                  <div className="space-y-8">
                     <div>
-                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-indigo-200">
+                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-sky-200">
                           <span>Clinic Commissions</span>
                           <span>65%</span>
                        </div>
-                       <div className="w-full bg-indigo-800 h-2 rounded-full overflow-hidden">
+                       <div className="w-full bg-sky-800 h-2 rounded-full overflow-hidden">
                           <div className="bg-white h-full w-[65%]"></div>
                        </div>
                     </div>
                     <div>
-                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-indigo-200">
+                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-sky-200">
                           <span>Featured Listings</span>
                           <span>25%</span>
                        </div>
-                       <div className="w-full bg-indigo-800 h-2 rounded-full overflow-hidden">
+                       <div className="w-full bg-sky-800 h-2 rounded-full overflow-hidden">
                           <div className="bg-white h-full w-[25%]"></div>
                        </div>
                     </div>
                     <div>
-                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-indigo-200">
+                       <div className="flex justify-between text-xs font-black uppercase tracking-widest mb-3 text-sky-200">
                           <span>Platform Fees</span>
                           <span>10%</span>
                        </div>
-                       <div className="w-full bg-indigo-800 h-2 rounded-full overflow-hidden">
+                       <div className="w-full bg-sky-800 h-2 rounded-full overflow-hidden">
                           <div className="bg-white h-full w-[10%]"></div>
                        </div>
                     </div>

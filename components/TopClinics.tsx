@@ -1,7 +1,14 @@
 import React from 'react';
-import { Building2, Star, MapPin, ChevronRight } from 'lucide-react';
+import { ChevronRight, Star, Building2, MapPin } from 'lucide-react';
+import { TRANSLATIONS } from '../constants';
+import { Language } from '../types';
 
-export const TopClinics: React.FC = () => {
+interface TopClinicsProps {
+  language: Language;
+}
+
+export const TopClinics: React.FC<TopClinicsProps> = ({ language }) => {
+  const t = TRANSLATIONS[language];
   const clinics = [
     { name: 'Aster Medcity', location: 'Kochi', rating: 4.9, image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=400&auto=format&fit=crop' },
     { name: 'Starlight Dental', location: 'Calicut', rating: 4.8, image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=400&auto=format&fit=crop' },
@@ -14,11 +21,11 @@ export const TopClinics: React.FC = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
           <div>
-            <h2 className="text-[10px] font-black text-brand-600 uppercase tracking-[0.3em] mb-4">Partner Clinics</h2>
-            <h3 className="text-4xl font-black text-slate-900 tracking-tight">Top Rated Healthcare Facilities</h3>
+            <h2 className="text-[10px] font-black text-sky-600 uppercase tracking-[0.3em] mb-4">{t.partnerClinics}</h2>
+            <h3 className="text-4xl font-black text-slate-900 tracking-tight">{t.topRatedFacilities}</h3>
           </div>
-          <button className="flex items-center gap-2 text-brand-600 font-black text-xs uppercase tracking-widest hover:gap-3 transition-all">
-            View All Clinics <ChevronRight className="w-4 h-4" />
+          <button className="flex items-center gap-2 text-sky-600 font-black text-xs uppercase tracking-widest hover:gap-3 transition-all">
+            {t.viewAllClinics} <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
@@ -33,8 +40,8 @@ export const TopClinics: React.FC = () => {
                 </div>
               </div>
               <div className="p-8">
-                <div className="flex items-center gap-2 text-[10px] font-black text-brand-600 uppercase tracking-widest mb-2">
-                  <Building2 className="w-3.5 h-3.5" /> Clinic
+                <div className="flex items-center gap-2 text-[10px] font-black text-sky-600 uppercase tracking-widest mb-2">
+                  <Building2 className="w-3.5 h-3.5" /> {t.clinic}
                 </div>
                 <h4 className="text-xl font-black text-slate-900 mb-4">{clinic.name}</h4>
                 <div className="flex items-center gap-2 text-slate-400 text-sm font-bold">

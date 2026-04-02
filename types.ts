@@ -3,6 +3,7 @@ export interface Doctor {
   name: string;
   specialty: string;
   image: string;
+  aiImage?: string;
   location: string;
   clinicName: string;
   rating: number;
@@ -45,6 +46,8 @@ export enum Page {
   ADMIN_DASHBOARD = 'ADMIN_DASHBOARD',
   SUPER_ADMIN_DASHBOARD = 'SUPER_ADMIN_DASHBOARD'
 }
+
+export type Language = 'EN' | 'HI';
 
 export interface AISymptomResponse {
   suggestedSpecialty: string;
