@@ -18,10 +18,11 @@ interface Message {
 
 interface AskExpertProps {
   onNavigate: (page: Page) => void;
+  onSelectSpecialty: (specialty: string) => void;
   language: Language;
 }
 
-export const AskExpert: React.FC<AskExpertProps> = ({ onNavigate, language }) => {
+export const AskExpert: React.FC<AskExpertProps> = ({ onNavigate, onSelectSpecialty, language }) => {
   const t = TRANSLATIONS[language];
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -232,8 +233,8 @@ export const AskExpert: React.FC<AskExpertProps> = ({ onNavigate, language }) =>
     return null;
   };
 
-  const handleSpecialtyClick = () => {
-    onNavigate(Page.SEARCH);
+  const handleSpecialtyClick = (specialty: string) => {
+    onSelectSpecialty(specialty);
   };
 
   return (

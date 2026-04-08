@@ -307,7 +307,7 @@ const App: React.FC = () => {
           </div>
         )}
 
-        {currentPage === Page.ASK_EXPERT && <AskExpert onNavigate={handleNavigate} language={language} />}
+        {currentPage === Page.ASK_EXPERT && <AskExpert onNavigate={handleNavigate} onSelectSpecialty={handleSelectSpecialty} language={language} />}
         {currentPage === Page.SIGN_IN && <SignIn onNavigate={handleNavigate} language={language} />}
         {currentPage === Page.SIGN_UP && <SignUp onNavigate={handleNavigate} language={language} />}
         {currentPage === Page.SIGN_UP_PATIENT && <SignUpPatient onNavigate={handleNavigate} language={language} />}
