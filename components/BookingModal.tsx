@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { CheckCircle, X, ThumbsUp, Users, Calendar, Clock, ChevronRight, User, Mail, Phone, BellRing, ShieldCheck } from 'lucide-react';
+import { CheckCircle, X, ThumbsUp, Users, Calendar, Clock, ChevronRight, User, Mail, Phone, BellRing, ShieldCheck, Building2, Video } from 'lucide-react';
 import { Doctor, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
 import { Button } from './Button';
@@ -41,6 +41,7 @@ const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ step, t }) => (
 export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onConfirm, language }) => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedSlot, setSelectedSlot] = useState<string>('');
+  const [visitType, setVisitType] = useState<'face-to-face' | 'online'>('face-to-face');
   const [step, setStep] = useState(1); // 1: Select Time, 2: Patient Details, 3: Success
   const t = TRANSLATIONS[language];
 
@@ -110,6 +111,35 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Visit Type Toggle (Face-to-face / Online) */}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setVisitType('face-to-face')}
+                    className={`flex items-center gap-2.5 px-6 py-3.5 rounded-full text-xs font-black tracking-wider transition-all duration-300 ${
+                      visitType === 'face-to-face'
+                        ? 'bg-white border-2 border-slate-200 text-slate-800 shadow-sm'
+                        : 'bg-[#eae7df]/60 hover:bg-[#dedad0]/80 text-slate-600 border-2 border-transparent'
+                    }`}
+                  >
+                    <Building2 className={`w-5 h-5 ${visitType === 'face-to-face' ? 'text-emerald-800' : 'text-slate-500'}`} />
+                    <span>{language === 'EN' ? 'Face-to-face visit' : 'आमने-सामने मुलाकात'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setVisitType('online')}
+                    className={`flex items-center gap-2.5 px-6 py-3.5 rounded-full text-xs font-black tracking-wider transition-all duration-300 ${
+                      visitType === 'online'
+                        ? 'bg-white border-2 border-slate-200 text-slate-800 shadow-sm'
+                        : 'bg-[#eae7df]/60 hover:bg-[#dedad0]/80 text-slate-600 border-2 border-transparent'
+                    }`}
+                  >
+                    <Video className={`w-5 h-5 ${visitType === 'online' ? 'text-slate-850' : 'text-slate-500'}`} />
+                    <span>{language === 'EN' ? 'Online' : 'ऑनलाइन वीडियो कॉल'}</span>
+                  </button>
                 </div>
 
                 {/* Date Selection - Next 15 Days */}
@@ -194,7 +224,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ doctor, onClose, onC
                     <BellRing className="w-5 h-5 text-white" />
                   </div>
                   <p className="text-sm font-bold text-sky-800 leading-relaxed">
-                    By clicking confirm, you'll receive an instant confirmation via SMS & WhatsApp. You are booking for <strong>{new Date(selectedDate).toLocaleDateString(language === 'EN' ? 'en-US' : 'hi-IN', { day: 'numeric', month: 'long' })}</strong> at <strong>{selectedSlot}</strong>.
+                    By clicking confirm, you'll receive an instant confirmation via SMS & WhatsApp. You are booking a <strong>{visitType === 'face-to-face' ? (language === 'EN' ? 'Face-to-face visit' : 'आमने-सामने मुलाकात') : (language === 'EN' ? 'Online' : 'ऑनलाइन')}</strong> session for <strong>{new Date(selectedDate).toLocaleDateString(language === 'EN' ? 'en-US' : 'hi-IN', { day: 'numeric', month: 'long' })}</strong> at <strong>{selectedSlot}</strong>.
                   </p>
                 </div>
 

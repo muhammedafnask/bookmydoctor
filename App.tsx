@@ -36,7 +36,7 @@ import {
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>(Page.HOME);
   const [language, setLanguage] = useState<Language>('EN');
-  const [filters, setFilters] = useState<FilterState>({ location: '', specialty: '', query: '', type: 'all' });
+  const [filters, setFilters] = useState<FilterState>({ location: '', specialty: '', query: '', type: 'all', consultationMode: 'all' });
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [doctors] = useState<Doctor[]>(MOCK_DOCTORS);
@@ -68,7 +68,7 @@ const App: React.FC = () => {
   };
 
   const handleSelectSpecialty = (specialty: string) => {
-    setFilters({ location: '', specialty, query: '', type: 'all' });
+    setFilters({ location: '', specialty, query: '', type: 'all', consultationMode: 'all' });
     handleNavigate(Page.SEARCH);
   };
 
@@ -99,7 +99,20 @@ const App: React.FC = () => {
       const matchType = filters.type && filters.type !== 'all'
         ? doc.type === filters.type
         : true;
-      return matchLoc && matchSpec && matchQuery && matchType;
+      
+      // Map consultation Modes for doctors:
+      // Dr. Mitchell (1) & Dr. Ross (4) = both; Dr. Hassan (2) = face-to-face; Dr. Chen (3) = online
+      const docModes = doc.id === '1' || doc.id === '4' 
+        ? ['online', 'face-to-face'] 
+        : doc.id === '3' 
+          ? ['online'] 
+          : ['face-to-face'];
+      
+      const matchMode = filters.consultationMode && filters.consultationMode !== 'all'
+        ? docModes.includes(filters.consultationMode)
+        : true;
+
+      return matchLoc && matchSpec && matchQuery && matchType && matchMode;
     });
   }, [filters, doctors]);
 
@@ -275,14 +288,26 @@ const App: React.FC = () => {
                          </select>
                        </div>
                        <div>
-                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">{t.type}</label>
+                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">{language === 'EN' ? 'Consultation Mode' : 'परामर्श का प्रकार'}</label>
+                          <select 
+                            className="w-full p-4 bg-slate-50 border-none rounded-[18px] text-sm font-bold text-slate-700 focus:ring-2 focus:ring-sky-500 cursor-pointer outline-none" 
+                            value={filters.consultationMode === 'all' ? '' : filters.consultationMode} 
+                            onChange={(e) => setFilters({...filters, consultationMode: e.target.value as FilterState['consultationMode']})}
+                          >
+                             <option value="" disabled>{language === 'EN' ? 'Select Mode' : 'माध्यम चुनें'}</option>
+                             <option value="online">{language === 'EN' ? '💻 Online Video' : '💻 ऑनलाइन वीडियो कॉल'}</option>
+                             <option value="face-to-face">{language === 'EN' ? '🏥 Face-to-Face' : '🏥 आमने-सामने मुलाकात'}</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 block">{t.type}</label>
                          <select className="w-full p-4 bg-slate-50 border-none rounded-[18px] text-sm font-bold text-slate-700 focus:ring-2 focus:ring-sky-500 cursor-pointer outline-none" value={filters.type} onChange={(e) => setFilters({...filters, type: e.target.value as FilterState['type']})}>
                             <option value="all">{t.allTypes}</option>
                             <option value="Independent">{t.independent}</option>
                             <option value="Clinic-based">{t.clinicBased}</option>
                          </select>
                        </div>
-                       <Button variant="outline" size="sm" className="w-full py-4.5 font-black text-[10px] uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:text-sky-600 hover:border-sky-600 rounded-[20px]" onClick={() => setFilters({location: '', specialty: '', query: '', type: 'all'})}>{t.clearFilters}</Button>
+                       <Button variant="outline" size="sm" className="w-full py-4.5 font-black text-[10px] uppercase tracking-widest border-2 border-slate-100 text-slate-400 hover:text-sky-600 hover:border-sky-600 rounded-[20px]" onClick={() => setFilters({location: '', specialty: '', query: '', type: 'all', consultationMode: 'all'})}>{t.clearFilters}</Button>
                     </div>
                  </div>
               </div>

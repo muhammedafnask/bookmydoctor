@@ -30,6 +30,7 @@ export interface FilterState {
   location: string;
   query: string;
   type?: 'Independent' | 'Clinic-based' | 'all';
+  consultationMode?: 'all' | 'online' | 'face-to-face';
 }
 
 export enum Page {

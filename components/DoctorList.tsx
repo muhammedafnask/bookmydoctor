@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, ShieldCheck, ThumbsUp, Users, Building2, Star, MapPin, Globe, Clock, Sparkles, Loader2 } from 'lucide-react';
+import { Search, ShieldCheck, ThumbsUp, Users, Building2, Star, MapPin, Globe, Clock, Sparkles, Loader2, Video } from 'lucide-react';
 import { Button } from './Button';
 import { Doctor, Language } from '../types';
 import { TRANSLATIONS } from '../constants';
@@ -118,6 +118,22 @@ export const DoctorList: React.FC<DoctorListProps> = ({ doctors, onBook, languag
                    </div>
                 </div>
               </div>
+            </div>
+
+            {/* Consultation Modes Support Indicators */}
+            <div className="flex flex-wrap items-center gap-2 mb-4">
+              {(doctor.id === '1' || doctor.id === '4' || doctor.id === '2') && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full text-[10px] font-black uppercase tracking-wider border border-emerald-100/50">
+                  <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                  {language === 'EN' ? 'Face-to-Face' : 'आमने-सामने मुलाकात'}
+                </span>
+              )}
+              {(doctor.id === '1' || doctor.id === '4' || doctor.id === '3') && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-800 rounded-full text-[10px] font-black uppercase tracking-wider border border-indigo-100/50">
+                  <Video className="w-3.5 h-3.5 text-indigo-600" />
+                  {language === 'EN' ? 'Online Consultation' : 'ऑनलाइन वीडियो परामर्श'}
+                </span>
+              )}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8 text-slate-500">

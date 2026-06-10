@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star, Briefcase, Sparkles, MessageSquare } from 'lucide-react';
+import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star, Briefcase, Sparkles, MessageSquare, Building2, Video } from 'lucide-react';
 import { Button } from './Button';
 import { LOCATIONS, SPECIALTIES, TRANSLATIONS } from '../constants';
 import { FilterState, Language, Page } from '../types';
@@ -14,6 +14,7 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) => {
   const [location, setLocation] = useState('');
   const [query, setQuery] = useState('');
+  const [consultationMode, setConsultationMode] = useState<'online' | 'face-to-face'>('online');
   const [isLocating, setIsLocating] = useState(false);
   const [showSpecialties, setShowSpecialties] = useState(false);
   const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
@@ -31,21 +32,22 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) =>
   }, []);
 
   const requestLocationAndProceed = (selectedSpecialty: string = '') => {
+    const finalSpecialty = selectedSpecialty || query;
     if ("geolocation" in navigator) {
       setIsLocating(true);
       navigator.geolocation.getCurrentPosition(
         () => {
           setIsLocating(false);
-          onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
+          onSearch({ location, query, specialty: finalSpecialty, type: 'all', consultationMode });
         },
         () => {
           setIsLocating(false);
-          onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
+          onSearch({ location, query, specialty: finalSpecialty, type: 'all', consultationMode });
         },
         { timeout: 5000 }
       );
     } else {
-      onSearch({ location, query, specialty: selectedSpecialty || query, type: 'all' });
+      onSearch({ location, query, specialty: finalSpecialty, type: 'all', consultationMode });
     }
   };
 
@@ -160,6 +162,33 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) =>
                   {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
                 </select>
                 <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 pointer-events-none" />
+              </div>
+
+              {/* Consultation Mode Selection */}
+              <div className="space-y-3 px-2">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">
+                  {language === 'EN' ? 'Mode of Consultation' : 'परामर्श का प्रकार'}
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { id: 'online', label: language === 'EN' ? 'Online' : 'ऑनलाइन', icon: Video },
+                    { id: 'face-to-face', label: language === 'EN' ? 'In-Clinic' : 'आमने-सामने', icon: Building2 }
+                  ].map((modeOption) => (
+                    <button
+                      key={modeOption.id}
+                      type="button"
+                      onClick={() => setConsultationMode(modeOption.id as 'online' | 'face-to-face')}
+                      className={`flex items-center justify-center gap-2 px-4 py-4 rounded-2xl text-xs font-black uppercase tracking-wider transition-all duration-300 ${
+                        consultationMode === modeOption.id
+                          ? 'bg-sky-600 text-white shadow-lg shadow-sky-100'
+                          : 'bg-slate-50 hover:bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      <modeOption.icon className="w-4 h-4 shrink-0" />
+                      <span>{modeOption.label}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* CTA Button */}
