@@ -5,7 +5,6 @@ import { Hero } from './components/Hero';
 import { SpecialtyCards } from './components/SpecialtyCards';
 import { DoctorList } from './components/DoctorList';
 import { TopClinics } from './components/TopClinics';
-import { HealthArticles } from './components/HealthArticles';
 import { BookingModal } from './components/BookingModal';
 import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
@@ -182,8 +181,6 @@ const App: React.FC = () => {
                   </div>
                </div>
             </div>
-
-            <HealthArticles language={language} />
 
             <div id="for-doctors" className="bg-slate-900 py-32 scroll-mt-20 overflow-hidden relative">
                <div className="absolute top-0 right-0 -mr-40 w-[600px] h-[600px] bg-sky-600/10 rounded-full blur-[120px]"></div>

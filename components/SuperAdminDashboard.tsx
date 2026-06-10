@@ -256,6 +256,117 @@ export const SuperAdminDashboard: React.FC<SuperAdminDashboardProps> = ({ onNavi
               </div>
            </div>
         )}
+
+        {activeTab === 'doctors' && (
+           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
+              <div className="bg-white rounded-[48px] border border-slate-200 overflow-hidden shadow-sm p-10">
+                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
+                    <div>
+                       <h2 className="text-2xl font-black text-slate-900">Manage Registered Doctors</h2>
+                       <p className="text-slate-400 text-sm font-medium">Verify credentials, revoke diagnostic licenses, or view clinics</p>
+                    </div>
+                    <span className="text-[10px] uppercase font-black tracking-widest text-emerald-600 bg-emerald-50 px-4 py-2 rounded-full">
+                       Secure Provider Registry
+                    </span>
+                 </div>
+
+                 <div className="overflow-x-auto">
+                    <table className="w-full">
+                       <thead className="bg-slate-50">
+                          <tr>
+                             <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctor Card</th>
+                             <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Specialization</th>
+                             <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Clinic Location</th>
+                             <th className="px-8 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Platform Status</th>
+                             <th className="px-8 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Actions</th>
+                          </tr>
+                       </thead>
+                       <tbody className="divide-y divide-slate-100">
+                          {[
+                             { id: 'd1', name: 'Dr. Arthur Mitchell', spec: 'General Physician', location: 'Mitchell Family Health, Kochi', status: 'Verified', experience: '12 Yrs' },
+                             { id: 'd2', name: 'Dr. Priya Das', spec: 'Cardiologist', location: 'Amrita Private, Kochi', status: 'Verified', experience: '15 Yrs' },
+                             { id: 'd3', name: 'Dr. Amit Sharma', spec: 'Dermatologist', location: 'Skin Clinic, Calicut', status: 'Pending Verification', experience: '8 Yrs' },
+                             { id: 'd4', name: 'Dr. Vivek Menon', spec: 'Orthopedist', location: 'OrthoCare, Kochi', status: 'Verified', experience: '10 Yrs' },
+                          ].map(doc => (
+                             <tr key={doc.id} className="hover:bg-slate-50/50 transition-colors">
+                                <td className="px-8 py-6">
+                                   <div className="font-black text-slate-900 text-sm">{doc.name}</div>
+                                   <div className="text-xs text-slate-400 font-bold">Exp: {doc.experience} / Reg #BMD-{doc.id}</div>
+                                </td>
+                                <td className="px-8 py-6">
+                                   <span className="text-xs font-black text-sky-600 uppercase tracking-wider">{doc.spec}</span>
+                                </td>
+                                <td className="px-8 py-6 text-xs text-slate-500 font-extrabold">{doc.location}</td>
+                                <td className="px-8 py-6">
+                                   <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                      doc.status === 'Verified' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-amber-50 text-amber-600 border border-amber-100 animate-pulse'
+                                   }`}>
+                                      {doc.status}
+                                   </span>
+                                </td>
+                                <td className="px-8 py-6 text-right">
+                                   <div className="flex justify-end gap-2">
+                                      {doc.status === 'Pending Verification' ? (
+                                         <Button size="sm" className="rounded-xl font-black uppercase text-[10px] tracking-wider py-1">
+                                            Approve Profile
+                                         </Button>
+                                      ) : (
+                                         <button className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all">
+                                            Revoke License
+                                         </button>
+                                      )}
+                                   </div>
+                                 </td>
+                              </tr>
+                           ))}
+                        </tbody>
+                     </table>
+                  </div>
+               </div>
+            </div>
+         )}
+
+         {activeTab === 'settings' && (
+            <div className="max-w-4xl space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
+               <div className="bg-white rounded-[48px] border border-slate-200 p-10 shadow-sm space-y-8">
+                  <div className="border-b border-slate-100 pb-6">
+                     <h2 className="text-2xl font-black text-slate-900">System Configuration Panel</h2>
+                     <p className="text-slate-500 font-medium text-sm">Control commissions tiers, legal disclaimers updates, and API thresholds</p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Base Platform Commission (%)</label>
+                        <input type="text" defaultValue="15%" className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-sky-200" />
+                     </div>
+                     <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Maximum Patient Video Duration (mins)</label>
+                        <input type="text" defaultValue="45" className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-sky-200" />
+                     </div>
+                     <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">Featured Listing Index Pricing (₹/day)</label>
+                        <input type="text" defaultValue="₹500 / day" className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-sky-200" />
+                     </div>
+                     <div>
+                        <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2">HIPAA Encryption Protocol Status</label>
+                        <select className="w-full px-5 py-3.5 bg-slate-50 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 outline-none focus:ring-2 focus:ring-sky-200">
+                           <option>AES-256 Enabled (Global Strict)</option>
+                           <option>Standard TLS 1.3</option>
+                        </select>
+                     </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-slate-100 flex gap-4">
+                     <Button className="px-8 py-4 bg-sky-600 hover:bg-sky-700 text-white text-xs font-black uppercase rounded-2xl tracking-widest">
+                        Save System Settings
+                     </Button>
+                     <button type="button" className="px-8 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-black uppercase rounded-2xl tracking-widest">
+                        Run Platform Integrity Diagnostic
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
       </main>
     </div>
   );
