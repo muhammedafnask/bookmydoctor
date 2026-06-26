@@ -1,9 +1,36 @@
 import React, { useState } from 'react';
 import { Page, Language } from '../types';
-import { TRANSLATIONS } from '../constants';
+import { TRANSLATIONS, SPECIALTIES } from '../constants';
 import { Button } from './Button';
 // Fixed: Added Users to imports
 import { Shield, Star, Users, ArrowLeft, CheckCircle, FileText, Lock, ChevronRight } from 'lucide-react';
+
+const SPECIALTY_TRANSLATIONS: Record<Language, Record<string, string>> = {
+  EN: {
+    'general-physician': 'General Physician',
+    'dentist': 'Dentist',
+    'cardiologist': 'Cardiologist',
+    'dermatologist': 'Dermatologist',
+    'neurologist': 'Neurologist',
+    'orthopedist': 'Orthopedist',
+    'psychologist': 'Psychologist',
+    'gynecologist': 'Gynecologist',
+    'ent': 'ENT',
+    'ophthalmologist': 'Ophthalmologist',
+  },
+  HI: {
+    'general-physician': 'सामान्य चिकित्सक',
+    'dentist': 'दंत चिकित्सक',
+    'cardiologist': 'हृदय रोग विशेषज्ञ',
+    'dermatologist': 'त्वचा रोग विशेषज्ञ',
+    'neurologist': 'तंत्रिका रोग विशेषज्ञ (Neurologist)',
+    'orthopedist': 'हड्डी रोग विशेषज्ञ (Orthopedist)',
+    'psychologist': 'मनोवैज्ञानिक (Psychologist)',
+    'gynecologist': 'स्त्री रोग विशेषज्ञ (Gynecologist)',
+    'ent': 'ईएनटी रोग विशेषज्ञ (ENT)',
+    'ophthalmologist': 'नेत्र रोग विशेषज्ञ (Ophthalmologist)',
+  }
+};
 
 interface SignUpSpecialistProps {
   onNavigate: (page: Page) => void;
@@ -88,9 +115,11 @@ export const SignUpSpecialist: React.FC<SignUpSpecialistProps> = ({ onNavigate, 
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t.primarySpecialty} *</label>
                   <select className="w-full px-6 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-sky-500 outline-none font-bold text-slate-700">
-                    <option>{t.generalPhysician}</option>
-                    <option>{t.cardiologist}</option>
-                    <option>{t.dermatologist}</option>
+                    {SPECIALTIES.map((spec) => (
+                      <option key={spec.id} value={spec.name}>
+                        {SPECIALTY_TRANSLATIONS[language]?.[spec.id] || spec.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div className="space-y-2">

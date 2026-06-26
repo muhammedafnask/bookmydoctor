@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star, Briefcase, Sparkles, MessageSquare, Building2, Video } from 'lucide-react';
+import { Search, MapPin, CheckCircle2, ChevronDown, Activity, Users, Star, Briefcase, MessageSquare, Building2, Video } from 'lucide-react';
 import { Button } from './Button';
 import { LOCATIONS, SPECIALTIES, TRANSLATIONS } from '../constants';
 import { FilterState, Language, Page } from '../types';
-import { SymptomCheckerModal } from './SymptomCheckerModal';
 
 interface HeroProps {
   onSearch: (filters: FilterState) => void;
@@ -17,7 +16,6 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) =>
   const [consultationMode, setConsultationMode] = useState<'online' | 'face-to-face'>('online');
   const [isLocating, setIsLocating] = useState(false);
   const [showSpecialties, setShowSpecialties] = useState(false);
-  const [isSymptomModalOpen, setIsSymptomModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const t = TRANSLATIONS[language];
 
@@ -88,12 +86,6 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) =>
              <div className="flex items-center gap-2 text-sm font-bold text-slate-600 bg-slate-50 px-4 py-2 rounded-2xl">
                 <Star className="w-4 h-4 text-amber-500 fill-amber-500" /> 4.9/5 Rating
              </div>
-             <button 
-               onClick={() => setIsSymptomModalOpen(true)}
-               className="flex items-center gap-2 text-sm font-black text-sky-600 bg-sky-50 px-6 py-2 rounded-2xl hover:bg-sky-100 transition-all shadow-sm border border-sky-100"
-             >
-                <Sparkles className="w-4 h-4 text-sky-500" /> AI Symptom Checker
-             </button>
              <button 
                onClick={() => onNavigate(Page.ASK_EXPERT)}
                className="flex items-center gap-2 text-sm font-black text-sky-600 bg-sky-50 px-6 py-2 rounded-2xl hover:bg-sky-100 transition-all shadow-sm border border-sky-100"
@@ -219,12 +211,6 @@ export const Hero: React.FC<HeroProps> = ({ onSearch, onNavigate, language }) =>
         </div>
       </div>
 
-      <SymptomCheckerModal 
-        isOpen={isSymptomModalOpen}
-        onClose={() => setIsSymptomModalOpen(false)}
-        onSelectSpecialty={handleSelectSpecialty}
-        language={language}
-      />
     </div>
   );
 };
